@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENCORE | Your Dance Community</title>
+<style>
+:root {
+  --plum:#592b45;
+  --pink:#f2dce5;
+  --rose:#bd7896;
+  --cream:#fffaf6;
+  --light:#fff0f5;
+  --muted:#896c7b;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--cream);
+  color:var(--plum);
+  font-family:Georgia,serif;
+}
+header {
+  text-align:center;
+  background:var(--pink);
+  padding:25px 12px;
+}
+header h1 { margin:0; letter-spacing:8px; font-size:38px; }
+header p { margin:8px 0 0; font-style:italic; }
+nav {
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+  padding:12px;
+  background:white;
+  border-bottom:1px solid #ead8e1;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+button {
+  cursor:pointer;
+  font:inherit;
+  color:var(--plum);
+  background:white;
+  border:1px solid #e2c6d3;
+  border-radius:24px;
+  padding:10px 14px;
+}
+button:hover,.active,.primary {
+  background:var(--plum);
+  color:white;
+}
+button:focus-visible,input:focus-visible,textarea:focus-visible {
+  outline:2px solid var(--rose);
+  outline-offset:2px;
+}
+main { max-width:780px; padding:18px; margin:auto; }
+h2 { font-size:28px; }
+.panel,.post {
+  background:white;
+  border:1px solid #eddee5;
+  border-radius:17px;
+  padding:16px;
+  margin-bottom:16px;
+}
+label { display:block; font-weight:bold; margin-top:12px; }
+input,textarea {
+  display:block;
+  width:100%;
+  padding:12px;
+  margin:7px 0 14px;
+  border:1px solid #dfc6d2;
+  border-radius:10px;
+  color:var(--plum);
+  background:white;
+  font:inherit;
+}
+input[type=file] { padding:8px; }
+textarea { min-height:85px; resize:vertical; }
+small,.muted { color:var(--muted); }
+.stories {
+  display:flex;
+  gap:15px;
+  overflow-x:auto;
+  padding:10px 0 20px;
+}
+.story-button {
+  flex:0 0 76px;
+  padding:0;
+  border:0;
+  background:transparent;
+  text-align:center;
+  overflow-wrap:anywhere;
+}
+.story-ring {
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  margin:0 auto 7px;
+  border:3px solid var(--rose);
+  background:var(--pink);
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  font-size:25px;
+}
+.story-ring img,.story-ring video {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.avatar {
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--pink);
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  flex-shrink:0;
+  overflow:hidden;
+}
+.avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+.profile-pic {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--pink);
+  border:3px solid var(--rose);
+  display:block;
+  margin:12px 0;
+}
+.post-head { display:flex; align-items:center; gap:10px; }
+.media-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.media-grid.single { grid-template-columns:1fr; }
+.media-grid img,.media-grid video {
+  display:block;
+  width:100%;
+  max-height:440px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#f6eaf0;
+}
+.actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.media-preview {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin:12px 0;
+}
+.preview-item { min-width:0; overflow-wrap:anywhere; }
+.preview-item img,.preview-item video {
+  width:100%;
+  max-height:220px;
+  object-fit:contain;
+  background:#f6eaf0;
+  border-radius:10px;
+}
+.preview-item p { font-size:12px; }
+.comment-item {
+  padding:9px;
+  margin-top:7px;
+  background:var(--light);
+  border-radius:9px;
+  overflow-wrap:anywhere;
+}
+.dancer-name { font-size:18px; font-weight:bold; }
+.modal {
+  position:fixed;
+  inset:0;
+  z-index:20;
+  background:rgba(35,15,27,.88);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+}
+.modal-card {
+  width:min(540px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--cream);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
+.story-view-media {
+  display:block;
+  width:100%;
+  max-height:60vh;
+  object-fit:contain;
+  margin:12px auto;
+  background:#f6eaf0;
+  border-radius:12px;
+}
+[hidden] { display:none !important; }
+footer { text-align:center; padding:25px; color:var(--muted); }
+@media(max-width:480px) {
+  header h1 { font-size:30px; }
+  main { padding:12px; }
+  nav button { padding:9px 11px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>ENCORE</h1>
+  <p>Your dance. Your people. Your encore.</p>
+</header>
+
+<nav>
+  <button class="active" data-page="Home">Home</button>
+  <button data-page="Discover">Discover</button>
+  <button data-page="Create">＋ Create</button>
+  <button data-page="Messages">Messages</button>
+  <button data-page="Journal">Journal</button>
+  <button data-page="Profile">Profile</button>
+</nav>
+
+<main>
+
+<section id="Home">
+  <h2>Your dance community ✨</h2>
+
+  <div id="stories" class="stories">
+    <button class="story-button" onclick="openStoryCreator()">
+      <div class="story-ring">＋</div>Add story
+    </button>
+    <button class="story-button" onclick="viewSampleStory('Olivia R.','🩰','A little ballet inspiration ♡')">
+      <div class="story-ring">🩰</div>Olivia
+    </button>
+    <button class="story-button" onclick="viewSampleStory('Sophia M.','🌷','Studio day! 🌷')">
+      <div class="story-ring">🌷</div>Sophia
+    </button>
+    <button class="story-button" onclick="viewSampleStory('Amelia K.','🦢','Keep dancing ✨')">
+      <div class="story-ring">🦢</div>Amelia
+    </button>
+    <button class="story-button" onclick="viewSampleStory('Isabelle T.','🎀','Dance is my happy place')">
+      <div class="story-ring">🎀</div>Isabelle
+    </button>
+  </div>
+
+  <div class="panel">
+    <b>Find your dance people ♡</b>
+    <input id="homeSearch" placeholder="Search names, styles, studios, levels..." oninput="searchFromHome()">
+    <button class="primary" onclick="showPage('Discover');searchFromHome()">Search dancers</button>
+  </div>
+
+  <div id="feed">
+    <article class="post">
+      <div class="post-head">
+        <div class="avatar">🩰</div>
+        <div><b>Olivia R.</b><br><small>Ballet · Example studio</small></div>
+      </div>
+      <div style="margin-top:12px;padding:40px 8px;background:linear-gradient(135deg,#f6dfe8,#fff1e8);border-radius:12px;text-align:center;font-size:45px">
+        🩰 🌸 🎀
+        <p style="font-size:15px">Little studio moments ♡</p>
+      </div>
+      <p>Little moments at the barre make rehearsals special. ♡</p>
+      <div class="actions">
+        <button onclick="likePost(this)">♡ Like</button>
+        <button onclick="commentPost(this)">Comment</button>
+        <button onclick="savePost(this)">Save</button>
+      </div>
+      <p class="muted">♡ <span class="like-count">12</span> likes</p>
+      <div class="comments"></div>
+    </article>
+
+    <article class="post">
+      <div class="post-head">
+        <div class="avatar">🌷</div>
+        <div><b>Sophia M.</b><br><small>Contemporary · Rose Dance Academy</small></div>
+      </div>
+      <div style="margin-top:12px;padding:40px 8px;background:linear-gradient(135deg,#eddae9,#f9e6db);border-radius:12px;text-align:center;font-size:45px">
+        🌷 ✨ 🩰
+        <p style="font-size:15px">Finding my flow</p>
+      </div>
+      <p>Learning something new in every class. Keep showing up! 💗</p>
+      <div class="actions">
+        <button onclick="likePost(this)">♡ Like</button>
+        <button onclick="commentPost(this)">Comment</button>
+        <button onclick="savePost(this)">Save</button>
+      </div>
+      <p class="muted">♡ <span class="like-count">8</span> likes</p>
+      <div class="comments"></div>
+    </article>
+  </div>
+</section>
+
+<section id="Discover" hidden>
+  <h2>Discover dancers 🔎</h2>
+  <p>Search by display name, dance style, studio, or level.</p>
+  <input id="discoverSearch" placeholder="Try ballet, beginner, or a studio..." oninput="filterDancers()">
+  <div id="dancers">
+    <div class="panel dancer" data-name="Olivia R." data-style="Ballet" data-studio="Example studio" data-level="Intermediate">
+      <div class="dancer-name">🩰 Olivia R.</div>
+      <p>Ballet · Level: Intermediate · Studio: Example studio</p>
+      <button onclick="followDancer(this)">＋ Follow</button>
+    </div>
+    <div class="panel dancer" data-name="Sophia M." data-style="Contemporary" data-studio="Rose Dance Academy" data-level="Beginner">
+      <div class="dancer-name">🌷 Sophia M.</div>
+      <p>Contemporary · Level: Beginner · Studio: Rose Dance Academy</p>
+      <button onclick="followDancer(this)">＋ Follow</button>
+    </div>
+    <div class="panel dancer" data-name="Amelia K." data-style="Jazz" data-studio="Northside Dance" data-level="Advanced 2">
+      <div class="dancer-name">🦢 Amelia K.</div>
+      <p>Jazz · Level: Advanced 2 · Studio: Northside Dance</p>
+      <button onclick="followDancer(this)">＋ Follow</button>
+    </div>
+    <div class="panel dancer" data-name="Isabelle T." data-style="Ballet" data-studio="Rose Dance Academy" data-level="Level 5">
+      <div class="dancer-name">🎀 Isabelle T.</div>
+      <p>Ballet · Level: Level 5 · Studio: Rose Dance Academy</p>
+      <button onclick="followDancer(this)">＋ Follow</button>
+    </div>
+  </div>
+  <p id="searchStatus" class="muted"></p>
+</section>
+
+<section id="Create" hidden>
+  <h2>Create a post ♡</h2>
+  <div class="panel">
+    <label for="mediaFiles">Photos and videos</label>
+    <input id="mediaFiles" type="file" accept="image/*,video/*" multiple onchange="previewMedia()">
+    <small>Select up to 20 photos and videos for one post.</small>
+    <div id="mediaPreview" class="media-preview"></div>
+    <label for="caption">Caption</label>
+    <textarea id="caption" placeholder="Share a moment from your dance journey..."></textarea>
+    <button class="primary" onclick="publishPost()">Share post ♡</button>
+    <button onclick="clearPostDraft()">Clear selection</button>
+    <p id="postStatus" aria-live="polite"></p>
+  </div>
+</section>
+
+<section id="Messages" hidden>
+  <h2>Messages 💌</h2>
+  <div class="panel">
+    <b>Demo conversation with Olivia</b>
+    <div id="chatHistory">
+      <div class="comment-item">Olivia: Hey! How did rehearsal go? ♡</div>
+    </div>
+    <label for="messageInput">Your message</label>
+    <input id="messageInput" placeholder="Write a demo message...">
+    <button class="primary" onclick="sendMessage()">Send</button>
+    <p><small>This is a local demo, not real online messaging.</small></p>
+  </div>
+</section>
+
+<section id="Journal" hidden>
+  <h2>My dance journal 📔</h2>
+  <div class="panel">
+    <label for="journalTitle">Entry title</label>
+    <input id="journalTitle" placeholder="Today's rehearsal...">
+    <label for="journalText">Your thoughts</label>
+    <textarea id="journalText" placeholder="What did you learn? What are you proud of?"></textarea>
+    <button class="primary" onclick="addJournalEntry()">Save entry</button>
+  </div>
+  <div id="journalEntries"></div>
+</section>
+
+<section id="Profile" hidden>
+  <h2>My dancer profile 🎀</h2>
+
+  <div class="panel">
+    <label for="profilePhoto">Profile picture</label>
+    <img id="profilePhotoPreview" class="profile-pic" alt="Your profile picture preview">
+    <input id="profilePhoto" type="file" accept="image/*" onchange="changeProfilePhoto()">
+    <button onclick="removeProfilePhoto()">Remove picture</button>
+    <p><small>Choose a picture from your device. It appears on your profile and new posts.</small></p>
+  </div>
+
+  <div class="panel">
+    <label for="profileName">Display name</label>
+    <input id="profileName" placeholder="Your display name">
+
+    <label for="profileStyles">Dance styles</label>
+    <input id="profileStyles" placeholder="Ballet, jazz, contemporary...">
+
+    <label for="profileLevel">Dance level</label>
+    <input id="profileLevel" type="text" placeholder="Beginner, Level 5, Advanced 2...">
+
+    <label for="profileStudio">Studio</label>
+    <input id="profileStudio" type="text" placeholder="Add your dance studio">
+
+    <label for="profileBio">Bio</label>
+    <textarea id="profileBio" placeholder="Tell your dance story..."></textarea>
+
+    <button class="primary" onclick="updateProfile()">Save profile preview</button>
+    <div id="profileResult" class="panel" style="margin-top:16px" hidden></div>
+    <small>Use a display name and avoid sharing private contact details or your home address.</small>
+  </div>
+</section>
+
+<footer>ENCORE · Made for the love of dance ♡</footer>
+</main>
+
+<div id="storyModal" class="modal" hidden>
+  <div class="modal-card">
+    <button onclick="closeStory()" style="float:right">✕ Close</button>
+    <h2 id="storyTitle">Story</h2>
+    <div id="storyContent"></div>
+    <p id="storyCaption"></p>
+    <button class="primary" onclick="closeStory()">Done</button>
+  </div>
+</div>
+
+<div id="storyCreator" class="modal" hidden>
+  <div class="modal-card">
+    <button onclick="closeStoryCreator()" style="float:right">✕ Close</button>
+    <h2>Add your story ♡</h2>
+    <p>Choose one photo or video for your story.</p>
+    <input id="storyFile" type="file" accept="image/*,video/*">
+    <label for="storyText">Story caption (optional)</label>
+    <textarea id="storyText" placeholder="A little dance moment..."></textarea>
+    <button class="primary" onclick="publishStory()">Add story</button>
+    <p id="storyStatus" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+let profilePhotoUrl = "";
+let chosenFiles = [];
+let previewUrls = [];
+let storyUrls = [];
+
+function showPage(name) {
+  document.querySelectorAll("main section").forEach(section => {
+    section.hidden = section.id !== name;
+  });
+  document.querySelectorAll("[data-page]").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === name);
+  });
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll("[data-page]").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function updateAvatar(avatar) {
+  avatar.innerHTML = "";
+  if (profilePhotoUrl) {
+    const image = document.createElement("img");
+    image.src = profilePhotoUrl;
+    image.alt = "Profile picture";
+    avatar.appendChild(image);
+  } else {
+    avatar.textContent = "🎀";
+  }
+}
+
+function changeProfilePhoto() {
+  const input = document.getElementById("profilePhoto");
+  const file = input.files && input.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please choose an image.");
+    input.value = "";
+    return;
+  }
+
+  if (profilePhotoUrl) URL.revokeObjectURL(profilePhotoUrl);
+  profilePhotoUrl = URL.createObjectURL(file);
+
+  document.getElementById("profilePhotoPreview").src = profilePhotoUrl;
+
+  // Update existing posts by this user.
+  document.querySelectorAll(".post[data-own-post='true'] .avatar")
+    .forEach(updateAvatar);
+
+  // Update the profile avatar, if it exists.
+  const avatar = document.getElementById("profileResultAvatar");
+  if (avatar) updateAvatar(avatar);
+}
+
+function removeProfilePhoto() {
+  if (profilePhotoUrl) URL.revokeObjectURL(profilePhotoUrl);
+  profilePhotoUrl = "";
+  document.getElementById("profilePhoto").value = "";
+  document.getElementById("profilePhotoPreview").removeAttribute("src");
+  document.querySelectorAll(".post[data-own-post='true'] .avatar")
+    .forEach(updateAvatar);
+  const avatar = document.getElementById("profileResultAvatar");
+  if (avatar) updateAvatar(avatar);
+}
+
+function likePost(button) {
+  const post = button.closest(".post");
+  const count = post.querySelector(".like-count");
+  const liked = button.dataset.liked === "true";
+  count.textContent = Number(count.textContent) + (liked ? -1 : 1);
+  button.dataset.liked = String(!liked);
+  button.textContent = liked ? "♡ Like" : "♥ Liked";
+}
+
+function savePost(button) {
+  const saved = button.dataset.saved === "true";
+  button.dataset.saved = String(!saved);
+  button.textContent = saved ? "Save" : "✓ Saved";
+}
+
+function commentPost(button) {
+  const text = prompt("Write your comment:");
+  if (!text || !text.trim()) return;
+  const comment = document.createElement("div");
+  comment.className = "comment-item";
+  comment.textContent = "You: " + text.trim();
+  button.closest(".post").querySelector(".comments").appendChild(comment);
+}
+
+function followDancer(button) {
+  const following = button.dataset.following === "true";
+  button.dataset.following = String(!following);
+  button.textContent = following ? "＋ Follow" : "✓ Following";
+}
+
+function filterDancers() {
+  const query = document.getElementById("discoverSearch").value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll(".dancer").forEach(dancer => {
+    const text = [
+      dancer.dataset.name,
+      dancer.dataset.style,
+      dancer.dataset.studio,
+      dancer.dataset.level
+    ].join(" ").toLowerCase();
+    dancer.hidden = !text.includes(query);
+    if (!dancer.hidden) shown++;
+  });
+  document.getElementById("searchStatus").textContent =
+    shown ? shown + " profile(s) found." : "No matches. Try another search.";
+}
+
+function searchFromHome() {
+  const query = document.getElementById("homeSearch").value;
+  document.getElementById("discoverSearch").value = query;
+  filterDancers();
+}
+
+function clearPostDraft() {
+  previewUrls.forEach(url => URL.revokeObjectURL(url));
+  previewUrls = [];
+  chosenFiles = [];
+  document.getElementById("mediaFiles").value = "";
+  document.getElementById("mediaPreview").innerHTML = "";
+  document.getElementById("caption").value = "";
+  document.getElementById("postStatus").textContent = "";
+}
+
+function previewMedia() {
+  const input = document.getElementById("mediaFiles");
+  const status = document.getElementById("postStatus");
+  const files = Array.from(input.files || []);
+
+  previewUrls.forEach(url => URL.revokeObjectURL(url));
+  previewUrls = [];
+  chosenFiles = [];
+  document.getElementById("mediaPreview").innerHTML = "";
+
+  if (files.length > 20) {
+    input.value = "";
+    status.textContent = "Please select no more than 20 files.";
+    return;
+  }
+
+  if (!files.every(file =>
+    file.type.startsWith("image/") || file.type.startsWith("video/")
+  )) {
+    input.value = "";
+    status.textContent = "Please select only photos and videos.";
+    return;
+  }
+
+  chosenFiles = files;
+  status.textContent = files.length ? files.length + " file(s) selected." : "";
+
+  files.forEach((file, index) => {
+    const url = URL.createObjectURL(file);
+    previewUrls.push(url);
+
+    const item = document.createElement("div");
+    item.className = "preview-item";
+    const media = document.createElement(
+      file.type.startsWith("video/") ? "video" : "img"
+    );
+    media.src = url;
+
+    if (media.tagName === "VIDEO") {
+      media.controls = true;
+      media.playsInline = true;
+    } else {
+      media.alt = "Selected photo " + (index + 1);
+    }
+
+    const label = document.createElement("p");
+    label.textContent = (index + 1) + " of " + files.length + " · " + file.name;
+    item.append(media, label);
+    document.getElementById("mediaPreview").appendChild(item);
+  });
+}
+
+function publishPost() {
+  const status = document.getElementById("postStatus");
+  const caption = document.getElementById("caption").value.trim();
+
+  if (!chosenFiles.length) {
+    status.textContent = "Choose at least one photo or video first.";
+    return;
+  }
+
+  const post = document.createElement("article");
+  post.className = "post";
+  post.dataset.ownPost = "true";
+
+  const heading = document.createElement("div");
+  heading.className = "post-head";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  updateAvatar(avatar);
+
+  const author = document.createElement("div");
+  const authorName = document.createElement("b");
+  authorName.textContent =
+    document.getElementById("profileName").value.trim() || "Your profile";
+  const authorInfo = document.createElement("small");
+  authorInfo.textContent =
+    (document.getElementById("profileStyles").value.trim() || "Dancer") +
+    " · " + (document.getElementById("profileStudio").value.trim() || "Studio not added");
+  author.append(authorName, document.createElement("br"), authorInfo);
+  heading.append(avatar, author);
+  post.appendChild(heading);
+
+  const grid = document.createElement("div");
+  grid.className = "media-grid" + (chosenFiles.length === 1 ? " single" : "");
+
+  chosenFiles.forEach((file, index) => {
+    const media = document.createElement(
+      file.type.startsWith("video/") ? "video" : "img"
+    );
+    media.src = URL.createObjectURL(file);
+    if (media.tagName === "VIDEO") {
+      media.controls = true;
+      media.playsInline = true;
+    } else {
+      media.alt = "Post photo " + (index + 1);
+    }
+    grid.appendChild(media);
+  });
+  post.appendChild(grid);
+
+  if (caption) {
+    const paragraph = document.createElement("p");
+    paragraph.textContent = caption;
+    post.appendChild(paragraph);
+  }
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const like = document.createElement("button");
+  like.textContent = "♡ Like";
+  like.onclick = () => likePost(like);
+  const comment = document.createElement("button");
+  comment.textContent = "Comment";
+  comment.onclick = () => commentPost(comment);
+  const save = document.createElement("button");
+  save.textContent = "Save";
+  save.onclick = () => savePost(save);
+  actions.append(like, comment, save);
+  post.appendChild(actions);
+
+  const count = document.createElement("p");
+  count.className = "muted";
+  count.innerHTML = '♡ <span class="like-count">0</span> likes';
+  post.appendChild(count);
+
+  const comments = document.createElement("div");
+  comments.className = "comments";
+  post.appendChild(comments);
+
+  document.getElementById("feed").prepend(post);
+  clearPostDraft();
+  showPage("Home");
+}
+
+function openStoryCreator() {
+  document.getElementById("storyFile").value = "";
+  document.getElementById("storyText").value = "";
+  document.getElementById("storyStatus").textContent = "";
+  document.getElementById("storyCreator").hidden = false;
+}
+function closeStoryCreator() {
+  document.getElementById("storyCreator").hidden = true;
+}
+function viewSampleStory(name, emoji, caption) {
+  document.getElementById("storyTitle").textContent = name + "'s story";
+  const content = document.getElementById("storyContent");
+  content.innerHTML = "";
+  const visual = document.createElement("div");
+  visual.style.cssText =
+    "padding:55px 10px;background:#f2dce5;border-radius:12px;font-size:60px";
+  visual.textContent = emoji;
+  content.appendChild(visual);
+  document.getElementById("storyCaption").textContent = caption;
+  document.getElementById("storyModal").hidden = false;
+}
+function openStoryViewer(name, url, isVideo, caption) {
+  document.getElementById("storyTitle").textContent = name + "'s story";
+  const content = document.getElementById("storyContent");
+  content.innerHTML = "";
+  const media = document.createElement(isVideo ? "video" : "img");
+  media.src = url;
+  media.className = "story-view-media";
+  if (isVideo) {
+    media.controls = true;
+    media.playsInline = true;
+  } else {
+    media.alt = name + "'s story";
+  }
+  content.appendChild(media);
+  document.getElementById("storyCaption").textContent = caption;
+  document.getElementById("storyModal").hidden = false;
+}
+function closeStory() {
+  document.getElementById("storyModal").hidden = true;
+  document.getElementById("storyContent").innerHTML = "";
+}
+function publishStory() {
+  const input = document.getElementById("storyFile");
+  const status = document.getElementById("storyStatus");
+  const file = input.files && input.files[0];
+
+  if (!file) {
+    status.textContent = "Choose a photo or video first.";
+    return;
+  }
+  if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
+    status.textContent = "Please choose a photo or video.";
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  storyUrls.push(url);
+  const isVideo = file.type.startsWith("video/");
+  const caption = document.getElementById("storyText").value.trim();
+  const stories = document.getElementById("stories");
+
+  const button = document.createElement("button");
+  button.className = "story-button";
+  button.onclick = () => openStoryViewer("Your", url, isVideo, caption);
+
+  const ring = document.createElement("div");
+  ring.className = "story-ring";
+  const thumb = document.createElement(isVideo ? "video" : "img");
+  thumb.src = url;
+  if (isVideo) {
+    thumb.muted = true;
+    thumb.playsInline = true;
+  } else {
+    thumb.alt = "Your story";
+  }
+  ring.appendChild(thumb);
+
+  const label = document.createElement("span");
+  label.textContent = "Your story";
+  button.append(ring, label);
+
+  stories.insertBefore(button, stories.children[1]);
+  closeStoryCreator();
+  openStoryViewer("Your", url, isVideo, caption);
+}
+
+function sendMessage() {
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+  if (!text) return;
+  const bubble = document.createElement("div");
+  bubble.className = "comment-item";
+  bubble.textContent = "You: " + text;
+  document.getElementById("chatHistory").appendChild(bubble);
+  input.value = "";
+}
+
+function addJournalEntry() {
+  const title = document.getElementById("journalTitle").value.trim();
+  const text = document.getElementById("journalText").value.trim();
+  if (!title && !text) return;
+
+  const card = document.createElement("div");
+  card.className = "panel";
+  const heading = document.createElement("h3");
+  heading.textContent = title || "Dance journal entry";
+  const paragraph = document.createElement("p");
+  paragraph.textContent = text;
+  card.append(heading, paragraph);
+  document.getElementById("journalEntries").prepend(card);
+  document.getElementById("journalTitle").value = "";
+  document.getElementById("journalText").value = "";
+}
+
+function updateProfile() {
+  const name = document.getElementById("profileName").value.trim();
+  const styles = document.getElementById("profileStyles").value.trim();
+  const level = document.getElementById("profileLevel").value.trim();
+  const studio = document.getElementById("profileStudio").value.trim();
+  const bio = document.getElementById("profileBio").value.trim();
+  const result = document.getElementById("profileResult");
+
+  result.innerHTML = "";
+  result.hidden = false;
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.id = "profileResultAvatar";
+  avatar.style.width = "90px";
+  avatar.style.height = "90px";
+  avatar.style.fontSize = "40px";
+  updateAvatar(avatar);
+
+  const heading = document.createElement("h3");
+  heading.textContent = name || "Your dancer profile";
+
+  const details = document.createElement("p");
+  details.textContent = "Dance styles: " + (styles || "Not added");
+
+  const levelLine = document.createElement("p");
+  levelLine.textContent = "Level: " + (level || "Not added");
+
+  const studioLine = document.createElement("p");
+  studioLine.textContent = "Studio: " + (studio || "Not added");
+
+  const bioLine = document.createElement("p");
+  bioLine.textContent = bio || "Your dance story will appear here.";
+
+  result.append(avatar, heading, details, levelLine, studioLine, bioLine);
+
+  let own = document.getElementById("yourDancerCard");
+  if (!own) {
+    own = document.createElement("div");
+    own.id = "yourDancerCard";
+    own.className = "panel dancer";
+    document.getElementById("dancers").prepend(own);
+  }
+
+  own.dataset.name = name || "Your profile";
+  own.dataset.style = styles;
+  own.dataset.studio = studio;
+  own.dataset.level = level;
+  own.innerHTML = "";
+
+  const ownName = document.createElement("div");
+  ownName.className = "dancer-name";
+  ownName.textContent = (name || "Your profile");
+
+  const ownDetails = document.createElement("p");
+  ownDetails.textContent =
+    (styles || "Dance styles not added") +
+    " · Level: " + (level || "Not added") +
+    " · Studio: " + (studio || "Not added");
+
+  const follow = document.createElement("button");
+  follow.textContent = "＋ Follow";
+  follow.onclick = () => followDancer(follow);
+  own.append(ownName, ownDetails, follow);
+
+  filterDancers();
+}
+
+// Set up the blank profile picture preview without a remote image.
+document.getElementById("profilePhotoPreview").src =
+  "data:image/svg+xml;charset=UTF-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">' +
+    '<rect width="200" height="200" fill="#f2dce5"/>' +
+    '<text x="100" y="115" font-size="48" text-anchor="middle" fill="#592b45">ENCORE</text>' +
+    '</svg>'
+  );
+</script>
+</body>
+</html>
